@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+COMMIT=$1
+
+shift 1
+
+echo "Initializing Backport Process for Commit $Commit"
+
+TARGETS=$*
+echo "Targets: $TARGETS"
+
+CUR_BRANCH="$(git symbolic-ref HEAD 2>/dev/null)" ||
+CUR_BRANCH="(unnamed branch)"     # detached HEAD
+CUR_BRANCH=${branch_name##refs/heads/}
+
+for BRANCH in TARGETS
+    git checkout $BRANCH
+    git pull
+    git cherry-pick $COMMIT
+    git push
+
+git checkout CUR_BRANCH
+echo "Done"
