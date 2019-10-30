@@ -12,7 +12,7 @@ TARGETS=$*
 echo "Targets: $TARGETS"
 
 CUR_BRANCH="$(git symbolic-ref HEAD 2>/dev/null)" ||
-CUR_BRANCH="(unnamed branch)"     # detached HEAD
+CUR_BRANCH="$(git rev-parse HEAD)"     # detached HEAD
 CUR_BRANCH=${CUR_BRANCH##refs/heads/}
 
 for BRANCH in $TARGETS
@@ -23,8 +23,5 @@ do
     git push
 done
 
-if [ "$CUR_BRANCH" != "(unnamed branch)" ]
-then
-    git checkout $CUR_BRANCH
-fi
+git checkout $CUR_BRANCH
 echo "Done"
